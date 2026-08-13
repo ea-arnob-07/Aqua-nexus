@@ -1,0 +1,9 @@
+build/
+build-web/
+dist/
+*.exe
+*.dll
+*.o
+*.obj
+*.wasm
+*.data
