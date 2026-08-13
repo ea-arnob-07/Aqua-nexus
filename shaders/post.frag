@@ -15,10 +15,21 @@ void main(){
     c=mix(c,avg,edge);       // FXAA-style local edge softening
     c += (c-avg)*0.065;      // recover fine photographic detail after AA
 
-    // Lightweight depth-contact AO: gives pond banks, rocks, equipment and vegetation grounding.
-    float d0=texture(uDepth,vUV).r; float ao=1.0;
+    // Lightweight depth-contact AO and stylised black outlines
+    float d0=texture(uDepth,vUV).r; float ao=1.0; float outline=1.0;
     if(d0<0.9999){
         float z0=linearDepth(d0), occ=0.0;
+        
+        // Depth Edge Detection for Black Border
+        float dN = linearDepth(texture(uDepth, vUV + vec2(0, px.y*1.5)).r);
+        float dS = linearDepth(texture(uDepth, vUV - vec2(0, px.y*1.5)).r);
+        float dE = linearDepth(texture(uDepth, vUV + vec2(px.x*1.5, 0)).r);
+        float dW = linearDepth(texture(uDepth, vUV - vec2(px.x*1.5, 0)).r);
+        
+        // Only draw outline on the inner edge (the closer foreground object)
+        float maxDiff = max(max(dN - z0, dS - z0), max(dE - z0, dW - z0));
+        outline = mix(1.0, 0.0, smoothstep(0.25, 0.55, maxDiff));
+
         vec2 offs[8]=vec2[8](vec2(1,0),vec2(-1,0),vec2(0,1),vec2(0,-1),vec2(1,1),vec2(-1,1),vec2(1,-1),vec2(-1,-1));
 #ifdef GL_ES
         for(int i=0;i<4;i++){
@@ -35,6 +46,7 @@ void main(){
 #endif
     }
     c*=ao;
+    c*=outline;
     c=vec3(1.0)-exp(-c*max(uExposure,0.1)); c=aces(c*1.03);
     float l=lum(c); c=mix(vec3(l),c,0.96); // restrained saturation, photographic rather than cartoon
     c=pow(max(c,vec3(0)),vec3(1.0/2.2)); c=(c-0.5)*1.035+0.5;
