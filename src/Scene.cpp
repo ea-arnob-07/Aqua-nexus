@@ -1313,6 +1313,7 @@ void SceneRenderer::appendWorldLabels(UI& ui,const Simulation& sim,const CameraR
             std::string dirt="AMMONIA NH3 / DUST";
             float tw=ui.textWidth(1.00f,dirt);
             ui.rect(s.x-tw*0.5f-5,s.y-2,tw+10,16,{0.08f,0.06f,0.02f,0.78f});
+            ui.rectOutline(s.x-tw*0.5f-5,s.y-2,tw+10,16,1.0f,{1.0f,0.76f,0.16f,0.44f});
             ui.text(s.x-tw*0.5f,s.y,1.00f,dirt,amber);
         }
     }
@@ -1321,6 +1322,7 @@ void SceneRenderer::appendWorldLabels(UI& ui,const Simulation& sim,const CameraR
         if(vis){
             std::string label="FAN "+std::to_string(i+1)+(sim.fans()[i].on?" ON":" OFF"); float tw=ui.textWidth(1.30f,label);
             ui.rect(s.x-tw*0.5f-5,s.y-3,tw+10,18,{0.015f,0.03f,0.035f,0.68f});
+            ui.rectOutline(s.x-tw*0.5f-5,s.y-3,tw+10,18,1.0f,{0.45f,0.70f,0.78f,0.44f});
             ui.text(s.x-tw*0.5f,s.y,1.30f,label,sim.fans()[i].on?glm::vec4(0.30f,1.0f,0.48f,1):glm::vec4(1.0f,0.43f,0.30f,1));
         }
     }
@@ -1328,7 +1330,9 @@ void SceneRenderer::appendWorldLabels(UI& ui,const Simulation& sim,const CameraR
     glm::vec3 s=projectToScreen(p.center+glm::vec3(4.2f,p.baseWaterY+p.waterLevel+1.85f,-2.0f),vp,width,height,vis);
     if(vis){
         std::string label="POND 2 - 6 LIVE SENSORS"; float tw=ui.textWidth(1.20f,label);
-        ui.rect(s.x-tw*0.5f-5,s.y-3,tw+10,17,{0.015f,0.03f,0.04f,0.68f}); ui.text(s.x-tw*0.5f,s.y,1.20f,label,cyan);
+        ui.rect(s.x-tw*0.5f-5,s.y-3,tw+10,17,{0.015f,0.03f,0.04f,0.68f});
+        ui.rectOutline(s.x-tw*0.5f-5,s.y-3,tw+10,17,1.0f,{0.30f,0.86f,1.0f,0.44f});
+        ui.text(s.x-tw*0.5f,s.y,1.20f,label,cyan);
     }
     const char* sensorNames[6] = {"TEMP","NH3","PRESS","PH","DO","LEVEL"};
     for(int i=0;i<6;++i){
@@ -1339,6 +1343,7 @@ void SceneRenderer::appendWorldLabels(UI& ui,const Simulation& sim,const CameraR
             std::string label=sensorNames[i];
             float tw=ui.textWidth(0.92f,label);
             ui.rect(s.x-tw*0.5f-4,s.y-2,tw+8,14,{0.010f,0.040f,0.055f,0.72f});
+            ui.rectOutline(s.x-tw*0.5f-4,s.y-2,tw+8,14,1.0f,{0.38f,1.0f,0.56f,0.44f});
             ui.text(s.x-tw*0.5f,s.y,0.92f,label,lime);
         }
     }
