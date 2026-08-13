@@ -78,11 +78,11 @@ void CameraRig::setCinematic(bool enabled){
 }
 
 void CameraRig::reset(){
-    target={0.0f,1.25f,0.3f};
-    yaw=-0.10f;
-    pitch=0.66f;
-    distance=72.0f;
-    fov=44.0f;
+    target={-4.0f, 0.5f, 1.0f};
+    yaw=-0.55f;
+    pitch=0.32f;
+    distance=58.0f;
+    fov=42.0f;
     cinematic=false;
     cinematicTime_=0.0f;
     dragging_=false;
