@@ -6,11 +6,11 @@ namespace aqua {
 class CameraRig {
 public:
     // Default oblique aerial composition is tuned to match the supplied reference image.
-    glm::vec3 target{0.0f,1.25f,0.3f};
-    float yaw=-0.10f;
-    float pitch=0.66f;
-    float distance=72.0f;
-    float fov=44.0f;
+    glm::vec3 target{-4.0f, 0.5f, 1.0f};
+    float yaw=-0.55f;
+    float pitch=0.32f;
+    float distance=58.0f;
+    float fov=42.0f;
     bool cinematic=false;
 
     glm::vec3 position() const;
