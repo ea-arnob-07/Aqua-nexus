@@ -186,10 +186,12 @@ glm::vec3 Simulation::fishPosition(const FishAgent& f) const {
     float q=(f.pond==1)?sensors_.quality01:pondQuality(f.pond);
     float speedMul=lerpf(0.38f,1.20f,q);
     float t=time_*f.speed*speedMul+f.phase;
-    float rx=p.size.x*(0.28f+0.075f*f.lane);
-    float rz=p.size.y*(0.29f-0.045f*f.lane);
-    float x=std::sin(t)*rx + std::sin(t*2.7f+f.wobble)*0.42f;
-    float z=std::cos(t*0.87f)*rz + std::cos(t*1.9f+f.wobble)*0.36f;
+    
+    // Tighten the roaming radius so fish don't clip into the sloped pond banks
+    float rx=p.size.x*(0.20f+0.055f*f.lane);
+    float rz=p.size.y*(0.20f-0.035f*f.lane);
+    float x=std::sin(t)*rx + std::sin(t*2.1f+f.wobble)*0.22f;
+    float z=std::cos(t*0.87f)*rz + std::cos(t*1.5f+f.wobble)*0.18f;
 
     // Positive rheotaxis: incoming water travels away from the pipe, so responsive
     // fish face back toward the inlet and station-hold against that current.  Their
@@ -199,20 +201,27 @@ glm::vec3 Simulation::fishPosition(const FishAgent& f) const {
     glm::vec2 across(-upstream.y,upstream.x);
     float response=smoothstep(0.08f,0.82f,inflow*fishCurrentAffinity(f));
     float individuality=0.5f+0.5f*std::sin(f.wobble*1.91f+f.phase*0.43f);
-    float holdingDistance=std::min(p.size.x,p.size.y)*(0.115f+0.085f*individuality+0.030f*f.lane);
+    
+    // Keep them closer to the center when holding station against the fan current
+    float holdingDistance=std::min(p.size.x,p.size.y)*(0.10f+0.06f*individuality+0.02f*f.lane);
     glm::vec2 holdCenter=glm::vec2(p.center.x,p.center.z)+upstream*holdingDistance;
-    float correction=std::sin(t*0.72f+f.wobble)*(0.34f+0.34f*individuality);
-    float lateral=std::sin(t*1.13f+f.phase*0.37f)*(0.66f+0.76f*individuality+0.22f*std::fabs(f.lane));
+    float correction=std::sin(t*0.72f+f.wobble)*(0.20f+0.20f*individuality);
+    float lateral=std::sin(t*1.13f+f.phase*0.37f)*(0.35f+0.35f*individuality+0.12f*std::fabs(f.lane));
     glm::vec2 currentPos=holdCenter+upstream*correction+across*lateral;
     glm::vec2 normalPos=glm::vec2(p.center.x+x,p.center.z+z);
     float holdBlend=response*lerpf(0.80f,0.93f,fishCurrentAffinity(f));
     glm::vec2 blended=glm::mix(normalPos,currentPos,holdBlend);
 
-    float depth=f.depth+0.08f*std::sin(t*1.7f+f.wobble);
-    float holdingDepth=0.62f+0.16f*f.lane+0.05f*std::sin(t*1.4f+f.wobble);
+    float depth=f.depth+0.06f*std::sin(t*1.7f+f.wobble);
+    float holdingDepth=0.52f+0.12f*f.lane+0.04f*std::sin(t*1.4f+f.wobble);
     depth=lerpf(depth,holdingDepth,response*0.55f);
     // Poor oxygen makes fish slightly nearer the surface, a visible response to sensors.
     if(f.pond==1) depth*=lerpf(0.64f,1.0f,saturate((sensors_.dissolvedOxygenMgL-2.5f)/4.0f));
+    
+    // Prevent clipping into the very bottom floor
+    float maxDepth = p.waterLevel - 0.25f;
+    if (depth > maxDepth) depth = maxDepth;
+    
     float y=p.baseWaterY+p.waterLevel-depth;
     return glm::vec3(blended.x,y,blended.y);
 }
