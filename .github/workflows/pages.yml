@@ -31,11 +31,13 @@ jobs:
         run: |
           sudo apt-get update
           sudo apt-get install -y libglm-dev ninja-build
+          mkdir -p local_glm
+          cp -r /usr/include/glm local_glm/
 
       - name: Build optimized WebAssembly release
         run: |
           chmod +x web/build_web.sh
-          ./web/build_web.sh -DGLM_INCLUDE_DIR=/usr/include
+          ./web/build_web.sh -DGLM_INCLUDE_DIR=$PWD/local_glm
 
       - name: Configure GitHub Pages
         uses: actions/configure-pages@v5
