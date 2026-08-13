@@ -57,7 +57,7 @@ void SceneRenderer::setNightMode(bool enabled){
     } else {
         sunDir_=glm::vec3(-0.40f,-0.87f,-0.28f);
         // Slightly softer daylight keeps the web build closer to the original look and avoids a washed-out noon feel.
-        sunColor_=glm::vec3(4.15f,3.68f,3.05f);
+        sunColor_=glm::vec3(3.2f,2.85f,2.35f);
     }
 }
 
@@ -1248,7 +1248,7 @@ void SceneRenderer::drawPost(float time){
     glBindFramebuffer(GL_FRAMEBUFFER,0); glViewport(0,0,width_,height_);
     glDisable(GL_DEPTH_TEST); glDisable(GL_BLEND); glDisable(GL_CULL_FACE);
     post_.use(); post_.set("uScreenSize",glm::vec2((float)fboW_,(float)fboH_)); post_.set("uTime",time);
-    post_.set("uExposure",nightMode_ ? 0.96f : 0.84f);
+    post_.set("uExposure",nightMode_ ? 0.96f : 0.76f);
     post_.set("uNear",0.08f); post_.set("uFar",190.0f);
     glActiveTexture(GL_TEXTURE0); glBindTexture(GL_TEXTURE_2D,sceneColor_); post_.set("uScene",0);
     glActiveTexture(GL_TEXTURE1); glBindTexture(GL_TEXTURE_2D,bloomTex_[0]); post_.set("uBloom",1);

@@ -181,8 +181,8 @@ void App::drawUI(){
     scene_->appendWorldLabels(*ui_,sim_,camera_,width_,height_);
 
     // Keep the HUD close to the original night-mode look in both modes: darker, calmer, and less washed-out over the day scene.
-    const glm::vec4 panel{0.008f,0.020f,0.038f,0.72f};
-    const glm::vec4 panelEdge{0.040f,0.185f,0.245f,0.82f};
+    const glm::vec4 panel{0.008f,0.020f,0.038f,0.95f};
+    const glm::vec4 panelEdge{0.040f,0.185f,0.245f,0.95f};
     const glm::vec4 shadow{0.0f,0.0f,0.012f,0.28f};
     const glm::vec4 text{0.86f,0.93f,0.98f,1.0f};
     const glm::vec4 muted{0.52f,0.66f,0.76f,1.0f};
