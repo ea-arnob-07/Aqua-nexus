@@ -181,8 +181,8 @@ void App::drawUI(){
     scene_->appendWorldLabels(*ui_,sim_,camera_,width_,height_);
 
     // Keep the HUD close to the original night-mode look in both modes: darker, calmer, and less washed-out over the day scene.
-    const glm::vec4 panel{0.008f,0.020f,0.038f,0.95f};
-    const glm::vec4 panelEdge{0.040f,0.185f,0.245f,0.95f};
+    const glm::vec4 panel{0.008f,0.020f,0.038f,1.0f};
+    const glm::vec4 panelEdge{0.040f,0.185f,0.245f,1.0f};
     const glm::vec4 shadow{0.0f,0.0f,0.012f,0.28f};
     const glm::vec4 text{0.86f,0.93f,0.98f,1.0f};
     const glm::vec4 muted{0.52f,0.66f,0.76f,1.0f};
@@ -232,8 +232,8 @@ void App::drawUI(){
     ui_->text(34,250,0.78f,"CLICK A FAN TO START OR STOP ITS PUMP",muted);
     for(int i=0;i<3;++i){
         const auto& f=sim_.fans()[i]; const HudRect& r=hud.fan[i];
-        glm::vec4 bg=f.on?glm::vec4(0.018f,0.17f,0.13f,0.62f):glm::vec4(0.17f,0.040f,0.060f,0.62f);
-        glm::vec4 edge=f.on?glm::vec4(0.13f,0.62f,0.44f,0.74f):glm::vec4(0.65f,0.15f,0.22f,0.74f);
+        glm::vec4 bg=f.on?glm::vec4(0.018f,0.17f,0.13f,0.92f):glm::vec4(0.17f,0.040f,0.060f,0.92f);
+        glm::vec4 edge=f.on?glm::vec4(0.13f,0.62f,0.44f,0.95f):glm::vec4(0.65f,0.15f,0.22f,0.95f);
         button(r,bg,edge);
         ui_->circle(r.x+13,r.y+14,4.0f,f.on?green:red,16);
         ui_->text(r.x+24,r.y+8,0.92f,"FAN "+std::to_string(i+1)+"  POND "+std::to_string(f.fromPond+1)+" -> POND "+std::to_string(f.toPond+1),text);
@@ -241,10 +241,10 @@ void App::drawUI(){
         std::string flow=fnum(52.0f*f.speed,0)+" L/S";
         ui_->text(r.x+r.w-ui_->textWidth(0.78f,flow)-12,r.y+31,0.78f,flow,cyan);
         HudRect badge{r.x+r.w-43,r.y+7,34,16};
-        ui_->roundedRect(badge.x,badge.y,badge.w,badge.h,6,{0.026f,0.086f,0.122f,0.74f});
+        ui_->roundedRect(badge.x,badge.y,badge.w,badge.h,6,{0.026f,0.086f,0.122f,0.95f});
         centered(badge,badge.y+5,0.58f,"KEY "+std::to_string(i+1),muted);
     }
-    button(hud.allFans,allOn?glm::vec4(0.20f,0.035f,0.055f,0.66f):glm::vec4(0.025f,0.21f,0.14f,0.66f),allOn?glm::vec4(0.75f,0.16f,0.23f,0.78f):glm::vec4(0.12f,0.68f,0.45f,0.78f));
+    button(hud.allFans,allOn?glm::vec4(0.20f,0.035f,0.055f,0.92f):glm::vec4(0.025f,0.21f,0.14f,0.92f),allOn?glm::vec4(0.75f,0.16f,0.23f,0.95f):glm::vec4(0.12f,0.68f,0.45f,0.95f));
     ui_->text(hud.allFans.x+13,hud.allFans.y+14,0.92f,allOn?"STOP ALL CIRCULATION FANS":"START ALL CIRCULATION FANS",allOn?red:green);
     ui_->text(hud.allFans.x+hud.allFans.w-ui_->textWidth(0.72f,"F KEY")-12,hud.allFans.y+15,0.72f,"F KEY",muted);
 
@@ -257,23 +257,23 @@ void App::drawUI(){
     const char* speedNames[3]={"NORMAL","FAST","DEMO"};
     for(int i=0;i<3;++i){
         bool active=std::fabs(simSpeed_-speeds[i])<0.1f;
-        button(hud.speed[i],active?glm::vec4(0.025f,0.20f,0.17f,0.66f):glm::vec4(0.025f,0.065f,0.095f,0.62f),active?glm::vec4(0.12f,0.72f,0.53f,0.78f):panelEdge);
+        button(hud.speed[i],active?glm::vec4(0.025f,0.20f,0.17f,0.92f):glm::vec4(0.025f,0.065f,0.095f,0.92f),active?glm::vec4(0.12f,0.72f,0.53f,0.95f):panelEdge);
         centered(hud.speed[i],hud.speed[i].y+7,0.84f,speedNames[i],active?green:text);
         centered(hud.speed[i],hud.speed[i].y+26,0.70f,std::to_string((int)speeds[i])+"X SPEED",muted);
     }
-    button(hud.pause,paused_?glm::vec4(0.20f,0.13f,0.025f,0.66f):glm::vec4(0.025f,0.065f,0.095f,0.62f),paused_?glm::vec4(0.72f,0.46f,0.10f,0.78f):panelEdge);
+    button(hud.pause,paused_?glm::vec4(0.20f,0.13f,0.025f,0.92f):glm::vec4(0.025f,0.065f,0.095f,0.92f),paused_?glm::vec4(0.72f,0.46f,0.10f,0.95f):panelEdge);
     centered(hud.pause,hud.pause.y+7,0.84f,paused_?"RESUME SIM":"PAUSE SIM",paused_?amber:text);
     centered(hud.pause,hud.pause.y+26,0.68f,"SPACE KEY",muted);
-    button(hud.reset,{0.025f,0.065f,0.095f,0.62f},panelEdge);
+    button(hud.reset,{0.025f,0.065f,0.095f,0.92f},panelEdge);
     centered(hud.reset,hud.reset.y+7,0.84f,"RESET ALL",text);
     centered(hud.reset,hud.reset.y+26,0.68f,"R KEY",muted);
-    button(hud.day,nightMode_?glm::vec4(0.025f,0.065f,0.095f,0.58f):glm::vec4(0.20f,0.15f,0.035f,0.68f),nightMode_?panelEdge:glm::vec4(0.80f,0.57f,0.13f,0.80f));
+    button(hud.day,nightMode_?glm::vec4(0.025f,0.065f,0.095f,0.92f):glm::vec4(0.20f,0.15f,0.035f,0.92f),nightMode_?panelEdge:glm::vec4(0.80f,0.57f,0.13f,0.95f));
     centered(hud.day,hud.day.y+7,0.82f,"DAY",nightMode_?muted:amber);
     centered(hud.day,hud.day.y+26,0.64f,"D KEY",muted);
-    button(hud.night,nightMode_?glm::vec4(0.025f,0.13f,0.20f,0.68f):glm::vec4(0.025f,0.065f,0.095f,0.58f),nightMode_?glm::vec4(0.13f,0.55f,0.82f,0.80f):panelEdge);
+    button(hud.night,nightMode_?glm::vec4(0.025f,0.13f,0.20f,0.92f):glm::vec4(0.025f,0.065f,0.095f,0.92f),nightMode_?glm::vec4(0.13f,0.55f,0.82f,0.95f):panelEdge);
     centered(hud.night,hud.night.y+7,0.76f,"NIGHT",nightMode_?cyan:muted);
     centered(hud.night,hud.night.y+26,0.64f,"N KEY",muted);
-    button(hud.fullscreen,{0.025f,0.080f,0.115f,0.62f},panelEdge);
+    button(hud.fullscreen,{0.025f,0.080f,0.115f,0.92f},panelEdge);
     centered(hud.fullscreen,hud.fullscreen.y+7,0.76f,fullscreen_?"EXIT FULLSCREEN":"ENTER FULLSCREEN",cyan);
     centered(hud.fullscreen,hud.fullscreen.y+26,0.68f,"F11 KEY",muted);
 
